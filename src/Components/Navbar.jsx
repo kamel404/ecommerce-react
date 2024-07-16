@@ -1,26 +1,38 @@
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import '../assets/navbar.css';
+import { NavLink } from 'react-router-dom';
+
 
 function NavBar() {
     return (
-        <>
-            <Navbar bg="light" expand="lg">
-                <Container>
-                    <Navbar.Brand href="/">Shopz</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="me-auto">
-                            <Nav.Link href="#home">Home</Nav.Link>
-                            <Nav.Link href="#features">Features</Nav.Link>
-                            <Nav.Link href="#pricing">Pricing</Nav.Link>
-                            <Nav.Link href="#cart">Cart</Nav.Link>
-                        </Nav>
-                    </Navbar.Collapse>
-                </Container>
-            </Navbar>
-        </>
+        <nav className="navbar navbar-expand-lg navbar-light bg-light py-3 sticky-top">
+            <div className="container">
+                <NavLink className="navbar-brand fw-bold fs-4 px-2" to="/">Shopzy</NavLink>
+                <button className="navbar-toggler mx-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+
+                <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul className="navbar-nav m-auto my-2 text-center">
+                        <li className="nav-item">
+                            <NavLink className="nav-link" to="/">Home</NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink className="nav-link" to="/product">Products</NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink className="nav-link" to="/about">About</NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink className="nav-link" to="/contact">Contact</NavLink>
+                        </li>
+                    </ul>
+                    <div className="buttons text-center">
+                        <NavLink to="/login" className="btn btn-outline-dark m-2"><i className="fa fa-sign-in-alt mr-1"></i> Login</NavLink>
+                        <NavLink to="/register" className="btn btn-outline-dark m-2"><i className="fa fa-user-plus mr-1"></i> Register</NavLink>
+                        <NavLink to="/cart" className="btn btn-outline-dark m-2"><i className="fa fa-cart-shopping mr-1"></i> Cart</NavLink>
+                    </div>
+                </div>
+            </div>
+        </nav>
     );
 }
 

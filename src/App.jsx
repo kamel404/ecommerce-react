@@ -1,8 +1,8 @@
 import Navbar from './Components/Navbar'
 import React from 'react';
-import '../node_modules/font-awesome/css/font-awesome.min.css';
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Home from './Components/Home';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 
 function App() {
