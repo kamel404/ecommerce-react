@@ -1,25 +1,46 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
-function LatestProducts() {
+const LatestProducts = () => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch('https://dummyjson.com/products?limit=9')
-      .then(res => res.json())
-      .then(data => setProducts(data.products));
+    const getProducts = async () => {
+      setLoading(true);
+      const response = await fetch('https://dummyjson.com/products?limit=9');
+      const data = await response.json();
+      setProducts(data.products);
+      setLoading(false);
+    };
+
+    getProducts();
   }, []);
 
-  return (
-    <div className="container my-4">
-        <div className="col-12">
-            <h2 className="display-5 text-center">Latest Products</h2>
-            <hr />
+  const Loading = () => {
+    return (
+      <>
+        <div className="col-12 py-5 text-center">
+          <Skeleton height={40} width={560} />
         </div>
-      <div className="row">
+        {Array(9).fill().map((_, index) => (
+          <div key={index} className="col-md-4 col-sm-6 col-xs-8 col-12 mb-4">
+            <Skeleton height={592} />
+          </div>
+        ))}
+      </>
+    );
+  };
+
+  const ShowProducts = () => {
+    return (
+      <>
         {products.map((product) => (
-          <div key={product.id} className="col-md-4 mb-4">
+          <div key={product.id} className="col-md-4 col-sm-6 col-xs-8 col-12 mb-4">
             <div className="card h-100">
               <img src={product.thumbnail} className="card-img-top" alt={product.title} />
               <div className="card-body">
@@ -30,9 +51,24 @@ function LatestProducts() {
             </div>
           </div>
         ))}
+      </>
+    );
+  };
+
+  return (
+    <div className="container my-4">
+      <div className="col-12">
+        <h2 className="display-5 text-center">Latest Products</h2>
+        <hr />
+      </div>
+      <div className="row justify-content-center">
+        {loading ? <Loading /> : <ShowProducts />}
+      </div>
+      <div className="col-12 text-center mt-4">
+        <Link to="/products" className="btn btn-secondary" aria-disabled="true">See More</Link>
       </div>
     </div>
   );
-}
+};
 
 export default LatestProducts;
