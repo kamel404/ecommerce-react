@@ -1,0 +1,31 @@
+.footer h5 {
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.footer p {
+    color: #666;
+    font-size: 14px;
+}
+
+.footer a {
+    color: #666;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+.footer .btn-outline-dark {
+    border-color: #333;
+    color: #333;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.footer .btn-outline-dark:hover {
+    background-color: #333;
+    color: #fff;
+}
