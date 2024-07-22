@@ -4,6 +4,7 @@ import '../assets/footer.css'; // Import custom CSS for additional styling
 function Footer() {
     return (
         <footer className="footer bg-light text-center text-lg-start">
+            <hr />
             <div className="container p-4">
                 <div className="row">
                     <div className="col-lg-6 col-md-12 mb-4 mb-md-0">

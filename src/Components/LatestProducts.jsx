@@ -12,7 +12,7 @@ const LatestProducts = () => {
   useEffect(() => {
     const getProducts = async () => {
       setLoading(true);
-      const response = await fetch('https://dummyjson.com/products?limit=9');
+      const response = await fetch('https://dummyjson.com/products?limit=6');
       const data = await response.json();
       setProducts(data.products);
       setLoading(false);
@@ -47,6 +47,7 @@ const LatestProducts = () => {
                 <h5 className="card-title">{product.title}</h5>
                 <p className="card-text">{product.description}</p>
                 <p className="card-text"><strong>Price:</strong> ${product.price}</p>
+                <Link to={`/product/${product.id}`} className="btn btn-primary">Buy Now</Link>
               </div>
             </div>
           </div>
@@ -65,7 +66,7 @@ const LatestProducts = () => {
         {loading ? <Loading /> : <ShowProducts />}
       </div>
       <div className="col-12 text-center mt-4">
-        <Link to="/products" className="btn btn-secondary" aria-disabled="true">See More</Link>
+        <Link to="/products" className="btn btn-secondary">See More</Link>
       </div>
     </div>
   );
