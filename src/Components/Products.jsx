@@ -5,34 +5,30 @@ import { Link } from "react-router-dom";
 
 const Products = () => {
   const [data, setData] = useState([]);
-  const [filter, setFilter] = useState(data);
+  const [filter, setFilter] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [category, setCategory] = useState(""); // State for selected category
   const itemsPerPage = 12;
-  let componentMounted = true;
 
   useEffect(() => {
     const getProducts = async () => {
       setLoading(true);
       const response = await fetch(
-        `https://dummyjson.com/products?limit=${itemsPerPage}&skip=${(currentPage - 1) * itemsPerPage}`
+        `https://dummyjson.com/products${
+          category ? `/category/${category}` : ""
+        }?limit=${itemsPerPage}&skip=${(currentPage - 1) * itemsPerPage}`
       );
-      if (componentMounted) {
-        const result = await response.json();
-        setData(result.products);
-        setFilter(result.products);
-        setTotalPages(Math.ceil(result.total / itemsPerPage));
-        setLoading(false);
-      }
-
-      return () => {
-        componentMounted = false;
-      };
+      const result = await response.json();
+      setData(result.products);
+      setFilter(result.products);
+      setTotalPages(Math.ceil(result.total / itemsPerPage));
+      setLoading(false);
     };
 
     getProducts();
-  }, [currentPage]);
+  }, [category, currentPage]);
 
   const Loading = () => {
     return (
@@ -50,8 +46,7 @@ const Products = () => {
   };
 
   const filterProduct = (cat) => {
-    const updatedList = data.filter((item) => item.category === cat);
-    setFilter(updatedList);
+    setCategory(cat);
     setCurrentPage(1); // Reset to the first page when filtering
   };
 
@@ -61,69 +56,77 @@ const Products = () => {
         <div className="buttons text-center py-5">
           <button
             className="btn btn-outline-dark btn-sm m-2"
-            onClick={() => setFilter(data)}
+            onClick={() => filterProduct("")}
           >
             All
           </button>
           <button
             className="btn btn-outline-dark btn-sm m-2"
-            onClick={() => filterProduct("men's clothing")}
+            onClick={() => filterProduct("mens-shirts")}
           >
             Men's Clothing
           </button>
           <button
             className="btn btn-outline-dark btn-sm m-2"
-            onClick={() => filterProduct("women's clothing")}
+            onClick={() => filterProduct("womens-dresses")}
           >
             Women's Clothing
           </button>
           <button
             className="btn btn-outline-dark btn-sm m-2"
-            onClick={() => filterProduct("jewelery")}
+            onClick={() => filterProduct("vehicle")}
           >
-            Jewelery
+            Vehicles
           </button>
           <button
             className="btn btn-outline-dark btn-sm m-2"
-            onClick={() => filterProduct("electronics")}
+            onClick={() => filterProduct("laptops")}
           >
-            Electronics
+            Laptops
           </button>
         </div>
 
-        {filter.map((product) => {
-          return (
-            <div id={product.id} key={product.id} className="col-md-4 col-sm-6 col-xs-8 col-12 mb-4">
-              <div className="card text-center h-100">
-                <img
-                  className="card-img-top p-3"
-                  src={product.thumbnail}
-                  alt="Card"
-                  height={300}
-                />
-                <div className="card-body">
-                  <h5 className="card-title">
-                    {product.title.substring(0, 12)}...
-                  </h5>
-                  <p className="card-text">
-                    {product.description.substring(0, 90)}...
-                  </p>
-                </div>
-                <ul className="list-group list-group-flush">
-                  <li className="list-group-item lead">$ {product.price}</li>
-                </ul>
-                <div className="card-body">
-                  <Link to={"/product/" + product.id} className="btn btn-dark m-1">
-                    Buy Now
-                  </Link>
-                  <button className="btn btn-dark m-1" onClick={() => addProduct(product)}>
-                    Add to Cart
-                  </button>
-                </div>
+        {filter.map((product) => (
+          <div
+            id={product.id}
+            key={product.id}
+            className="col-md-4 col-sm-6 col-xs-8 col-12 mb-4"
+          >
+            <div className="card text-center h-100">
+              <img
+                className="card-img-top p-3"
+                src={product.thumbnail}
+                alt="Card"
+                height={300}
+              />
+              <div className="card-body">
+                <h5 className="card-title">
+                  {product.title.substring(0, 12)}...
+                </h5>
+                <p className="card-text">
+                  {product.description.substring(0, 90)}...
+                </p>
+              </div>
+              <ul className="list-group list-group-flush">
+                <li className="list-group-item lead">$ {product.price}</li>
+              </ul>
+              <div className="card-body">
+                <Link
+                  to={"/product/" + product.id}
+                  className="btn btn-dark m-1"
+                >
+                  Buy Now
+                </Link>
+                <button
+                  className="btn btn-dark m-1"
+                  onClick={() => addProduct(product)}
+                >
+                  Add to Cart
+                </button>
               </div>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </>
     );
   };
@@ -132,30 +135,40 @@ const Products = () => {
     const getPaginationItems = () => {
       const paginationItems = [];
       const totalPageButtons = 5;
-      
-      // Determine the starting and ending page numbers
-      let startPage = Math.max(currentPage - Math.floor(totalPageButtons / 2), 1);
+
+      let startPage = Math.max(
+        currentPage - Math.floor(totalPageButtons / 2),
+        1
+      );
       let endPage = Math.min(startPage + totalPageButtons - 1, totalPages);
-  
-      // Adjust startPage if we're near the end
+
       if (endPage - startPage + 1 < totalPageButtons) {
         startPage = Math.max(endPage - totalPageButtons + 1, 1);
       }
-  
-      // Add the "Previous" button
+
       paginationItems.push(
-        <li key="prev" className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
-          <button className="page-link" onClick={() => setCurrentPage(currentPage - 1)}>
+        <li
+          key="prev"
+          className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
+        >
+          <button
+            className="page-link"
+            onClick={() => setCurrentPage(currentPage - 1)}
+          >
             Previous
           </button>
         </li>
       );
-  
-      // Add the first page and ellipsis if necessary
+
       if (startPage > 1) {
         paginationItems.push(
-          <li key={1} className={`page-item ${currentPage === 1 ? "active" : ""}`}>
-            <button className="page-link" onClick={() => setCurrentPage(1)}>1</button>
+          <li
+            key={1}
+            className={`page-item ${currentPage === 1 ? "active" : ""}`}
+          >
+            <button className="page-link" onClick={() => setCurrentPage(1)}>
+              1
+            </button>
           </li>
         );
         if (startPage > 2) {
@@ -166,17 +179,20 @@ const Products = () => {
           );
         }
       }
-  
-      // Add the middle page buttons
+
       for (let i = startPage; i <= endPage; i++) {
         paginationItems.push(
-          <li key={i} className={`page-item ${currentPage === i ? "active" : ""}`}>
-            <button className="page-link" onClick={() => setCurrentPage(i)}>{i}</button>
+          <li
+            key={i}
+            className={`page-item ${currentPage === i ? "active" : ""}`}
+          >
+            <button className="page-link" onClick={() => setCurrentPage(i)}>
+              {i}
+            </button>
           </li>
         );
       }
-  
-      // Add the ellipsis and last page if necessary
+
       if (endPage < totalPages) {
         if (endPage < totalPages - 1) {
           paginationItems.push(
@@ -186,26 +202,39 @@ const Products = () => {
           );
         }
         paginationItems.push(
-          <li key={totalPages} className={`page-item ${currentPage === totalPages ? "active" : ""}`}>
-            <button className="page-link" onClick={() => setCurrentPage(totalPages)}>
+          <li
+            key={totalPages}
+            className={`page-item ${currentPage === totalPages ? "active" : ""}`}
+          >
+            <button
+              className="page-link"
+              onClick={() => setCurrentPage(totalPages)}
+            >
               {totalPages}
             </button>
           </li>
         );
       }
-  
-      // Add the "Next" button
+
       paginationItems.push(
-        <li key="next" className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
-          <button className="page-link" onClick={() => setCurrentPage(currentPage + 1)}>
+        <li
+          key="next"
+          className={`page-item ${
+            currentPage === totalPages ? "disabled" : ""
+          }`}
+        >
+          <button
+            className="page-link"
+            onClick={() => setCurrentPage(currentPage + 1)}
+          >
             Next
           </button>
         </li>
       );
-  
+
       return paginationItems;
     };
-  
+
     return (
       <nav>
         <ul className="pagination justify-content-center">
