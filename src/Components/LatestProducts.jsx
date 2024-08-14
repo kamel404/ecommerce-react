@@ -60,7 +60,7 @@ const LatestProducts = () => {
     <div className="container my-4">
       <div className="col-12">
         <h2 className="display-5 text-center">Latest Products</h2>
-        <hr />
+        <br />
       </div>
       <div className="row justify-content-center">
         {loading ? <Loading /> : <ShowProducts />}
