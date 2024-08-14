@@ -9,17 +9,17 @@ const Products = () => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [category, setCategory] = useState(""); // State for selected category
+  const [category, setCategory] = useState("");
   const itemsPerPage = 12;
 
   useEffect(() => {
     const getProducts = async () => {
       setLoading(true);
-      const response = await fetch(
-        `https://dummyjson.com/products${
-          category ? `/category/${category}` : ""
-        }?limit=${itemsPerPage}&skip=${(currentPage - 1) * itemsPerPage}`
-      );
+      const url = `https://dummyjson.com/products${
+        category ? `/category/${category}` : ""
+      }?limit=${itemsPerPage}&skip=${(currentPage - 1) * itemsPerPage}`;
+    
+      const response = await fetch(url);
       const result = await response.json();
       setData(result.products);
       setFilter(result.products);
@@ -47,7 +47,7 @@ const Products = () => {
 
   const filterProduct = (cat) => {
     setCategory(cat);
-    setCurrentPage(1); // Reset to the first page when filtering
+    setCurrentPage(1);
   };
 
   const ShowProducts = () => {
