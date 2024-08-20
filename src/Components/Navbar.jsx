@@ -1,7 +1,19 @@
 import { NavLink } from 'react-router-dom';
 
-
 function NavBar() {
+    const navItems = [
+        { to: "/", label: "Home" },
+        { to: "/products", label: "Products" },
+        { to: "/about", label: "About" },
+        { to: "/contact", label: "Contact" }
+    ];
+
+    const buttonItems = [
+        { to: "/login", label: "Login", icon: "fa-sign-in-alt" },
+        { to: "/register", label: "Register", icon: "fa-user-plus" },
+        { to: "/cart", label: "Cart", icon: "fa-cart-shopping" }
+    ];
+
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light py-3 sticky-top">
             <div className="container">
@@ -12,23 +24,18 @@ function NavBar() {
 
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav m-auto my-2 text-center">
-                        <li className="nav-item">
-                            <NavLink className="nav-link" to="/">Home</NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink className="nav-link" to="/products">Products</NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink className="nav-link" to="/about">About</NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink className="nav-link" to="/contact">Contact</NavLink>
-                        </li>
+                        {navItems.map((item, index) => (
+                            <li key={index} className="nav-item">
+                                <NavLink className="nav-link" to={item.to}>{item.label}</NavLink>
+                            </li>
+                        ))}
                     </ul>
                     <div className="buttons text-center">
-                        <NavLink to="/login" className="btn btn-outline-dark m-2"><i className="fa fa-sign-in-alt mr-1"></i> Login</NavLink>
-                        <NavLink to="/register" className="btn btn-outline-dark m-2"><i className="fa fa-user-plus mr-1"></i> Register</NavLink>
-                        <NavLink to="/cart" className="btn btn-outline-dark m-2"><i className="fa fa-cart-shopping mr-1"></i> Cart</NavLink>
+                        {buttonItems.map((item, index) => (
+                            <NavLink key={index} to={item.to} className="btn btn-outline-dark m-2">
+                                <i className={`fa ${item.icon} mr-1`}></i> {item.label}
+                            </NavLink>
+                        ))}
                     </div>
                 </div>
             </div>
