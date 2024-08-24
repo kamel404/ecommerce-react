@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { Link, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addCart } from "../redux/action";
 
 const Product = () => {
   const { id } = useParams();
   const [product, setProduct] = useState([]);
   const [similarProducts, setSimilarProducts] = useState([]);
+  const [cart, setCart] = useState([]); // State to manage cart items
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
-
 
   useEffect(() => {
     const getProduct = async () => {
@@ -28,7 +30,13 @@ const Product = () => {
     };
     getProduct();
   }, [id]);
-  
+
+  const dispatch = useDispatch();
+
+  const addProduct = (product) => {
+    setCart([...cart, product]); // Add the product to the cart state
+    dispatch(addCart(product))
+  };
 
   const Loading = () => {
     return (
@@ -78,7 +86,7 @@ const Product = () => {
               <p className="lead">{product.description}</p>
               <button
                 className="btn btn-outline-dark"
-                // onClick={() => addProduct(product)}
+                onClick={() => addProduct(product)} // Add to cart function
               >
                 Add to Cart
               </button>
@@ -135,9 +143,6 @@ const Product = () => {
                       {item.title.substring(0, 15)}...
                     </h5>
                   </div>
-                  {/* <ul className="list-group list-group-flush">
-                    <li className="list-group-item lead">${product.price}</li>
-                  </ul> */}
                   <div className="card-body">
                     <Link
                       to={"/product/" + item.id}
@@ -145,12 +150,12 @@ const Product = () => {
                     >
                       Buy Now
                     </Link>
-                    <button
+                    {/* <button
                       className="btn btn-dark m-1"
-                    //   onClick={() => addProduct(item)}
+                      onClick={() => addProduct(item)} // Add to cart function
                     >
                       Add to Cart
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               );
@@ -160,14 +165,15 @@ const Product = () => {
       </>
     );
   };
+
   return (
     <>
       <div className="container">
         <div className="row">{loading ? <Loading /> : <ShowProduct />}</div>
         <div className="row my-5 py-5">
           <div className="d-none d-md-block">
-          <h2 className="">You may also Like</h2>
-              {loading2 ? <Loading2 /> : <ShowSimilarProduct />}
+            <h2 className="">You may also Like</h2>
+            {loading2 ? <Loading2 /> : <ShowSimilarProduct />}
           </div>
         </div>
       </div>

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
+import { addCart } from "../redux/action";
+import { useDispatch } from "react-redux";
 import "react-loading-skeleton/dist/skeleton.css";
 import ShowProducts from "./ShowProducts"; // Import the presentational component
 
@@ -50,8 +52,10 @@ const Products = () => {
     setCurrentPage(1);
   };
 
+  const dispatch = useDispatch();
+  
   const addProduct = (product) => {
-    // Your add to cart logic here
+    dispatch(addCart(product))
   };
 
   const Pagination = () => {
