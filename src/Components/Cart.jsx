@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addCart, delCart } from "../redux/action";
 import { Link } from "react-router-dom";
@@ -13,7 +13,7 @@ const Cart = () => {
         <div className="row">
           <div className="col-md-12 py-5 bg-light text-center">
             <h4 className="p-3 display-5">Your Cart is Empty</h4>
-            <Link to="/products" className="btn  btn-outline-dark mx-4">
+            <Link to="/products" className="btn btn-outline-dark mx-4">
               <i className="fa fa-arrow-left"></i> Continue Shopping
             </Link>
           </div>
@@ -29,17 +29,21 @@ const Cart = () => {
     dispatch(delCart(product));
   };
 
-  const ShowCart = () => {
+  // used UseMemo here
+  const { subtotal, totalItems } = useMemo(() => {
     let subtotal = 0;
-    let shipping = 30.0;
     let totalItems = 0;
-    state.map((item) => {
-      return (subtotal += item.price * item.qty);
+    state.forEach((item) => {
+      subtotal += item.price * item.qty;
+      totalItems += item.qty;
     });
+    return { subtotal, totalItems };
+  }, [state]);
 
-    state.map((item) => {
-      return (totalItems += item.qty);
-    });
+  const shipping = 30.0;
+  const totalAmount = useMemo(() => subtotal + shipping, [subtotal, shipping]);
+
+  const ShowCart = () => {
     return (
       <>
         <section className="h-100 gradient-custom">
@@ -62,7 +66,6 @@ const Cart = () => {
                               >
                                 <img
                                   src={item.image}
-                                  // className="w-100"
                                   alt={item.title}
                                   width={100}
                                   height={75}
@@ -74,8 +77,6 @@ const Cart = () => {
                               <p>
                                 <strong>{item.title}</strong>
                               </p>
-                              {/* <p>Color: blue</p>
-                              <p>Size: M</p> */}
                             </div>
 
                             <div className="col-lg-4 col-md-6">
@@ -139,7 +140,7 @@ const Cart = () => {
                           <strong>Total amount</strong>
                         </div>
                         <span>
-                          <strong>${Math.round(subtotal + shipping)}</strong>
+                          <strong>${Math.round(totalAmount)}</strong>
                         </span>
                       </li>
                     </ul>

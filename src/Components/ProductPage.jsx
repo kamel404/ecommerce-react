@@ -11,6 +11,7 @@ const Product = () => {
   const [cart, setCart] = useState([]); // State to manage cart items
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getProduct = async () => {
@@ -31,7 +32,6 @@ const Product = () => {
     getProduct();
   }, [id]);
 
-  const dispatch = useDispatch();
 
   const addProduct = (product) => {
     setCart([...cart, product]); // Add the product to the cart state
@@ -150,12 +150,6 @@ const Product = () => {
                     >
                       Buy Now
                     </Link>
-                    {/* <button
-                      className="btn btn-dark m-1"
-                      onClick={() => addProduct(item)} // Add to cart function
-                    >
-                      Add to Cart
-                    </button> */}
                   </div>
                 </div>
               );
